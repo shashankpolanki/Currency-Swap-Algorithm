@@ -1,0 +1,42 @@
+USD-FIAT Gateway Prototype
+---------------------------
+Objective: Enable users especially merchants to be able to buy/sell NANO
+directly from a platform by connecting their Coinbase account with OAuth2.
+This will boost adoption by removing the work needed to purchasing
+and securely storing alt coins like NANO.
+
+Transaction Pipeline:
+Currency conversions: USD -> LTC -> BTC -> NANO
+Currency Location Flow: Coinbase -> Binance -> User's Nano address
+
+Brief Summary:
+
+- Allow user to choose how much USD he wishes to use to purchase NANO from
+  his Coinbase account along with an approximation on how much NANO he will
+  receive.
+
+- Trigger an AWS lambda function through an API gateway that uses USD from
+  user's Coinbase account to purchase Litecoin and then send the Litecoin to
+  Binance (since Litecoin is the fastest coin on Coinbase).
+
+- Use a Coinbase webhook to alert another AWS lambda function when the withdrawal
+  is complete in order to convert LTC to BTC to then NANO on Binance.
+
+- The same lambda function as above or a different once can then withdraw
+  the Nano to the user's Nano address (The address can be stored/retrieved from a database)
+
+- Done! Display on the user's screen a complete, transparent record of this
+  transaction e.g., transaction fees, timestamps, and final amount of Nano recieved.
+
+Foreword About My Code:
+- This code is a simplified version of this procedure. Due note that a financial
+  pipeline like this needs to be thoroughly tested.
+- I organized the operations of functions into paths of Node.js express servers.
+  These need to be converted to be able to be compatible with Lambda functions.
+- I only account for the purchase of Nano but not the sale of Nano.
+
+Future thoughts:
+- There are ways to streamline this process e.g., using a pool fund to instantly
+  transfer Nano to users on purchase, keeping USDT on Binance that can be converted
+  into Nano and sent to user on purchase, and more, but these require scale
+  in order to be successful.
